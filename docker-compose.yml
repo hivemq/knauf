@@ -1,0 +1,62 @@
+version: "3.3"
+services:
+  hmq-node1:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        HIVEMQ_VERSION: ${HIVEMQ_VERSION}
+    container_name: hivemq_broker
+    networks:
+      hiveMQ.net:
+        ipv4_address: "172.31.0.101"
+    volumes:
+       - "./conf/:/opt/hivemq/conf"
+
+  hmq-node2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        HIVEMQ_VERSION: ${HIVEMQ_VERSION}
+    networks:
+      hiveMQ.net:
+        ipv4_address: "172.31.0.102"
+    volumes:
+       - "./conf/:/opt/hivemq/conf"
+
+  hmq-node3:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        HIVEMQ_VERSION: ${HIVEMQ_VERSION}
+    networks:
+      hiveMQ.net:
+        ipv4_address: "172.31.0.103"
+    volumes:
+       - "./conf/:/opt/hivemq/conf"
+
+  haproxy-lb:
+    image: haproxytech/haproxy-alpine:2.6.6
+    networks:
+      - hiveMQ.net
+    volumes:
+       - "./haproxy/:/usr/local/etc/haproxy:ro"
+    ports:
+       - "1883:1883"
+       - "8889:8889"
+       - "8404:8404"
+       - "8080:8080"
+    depends_on:
+       - hmq-node1
+       - hmq-node2
+       - hmq-node3
+
+networks:
+  hiveMQ.net:
+    driver: bridge
+    ipam:
+     config:
+       - subnet: 172.31.0.0/24
+         gateway: 172.31.0.1

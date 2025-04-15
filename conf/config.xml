@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<hivemq xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="config.xsd">
+
+    <listeners>
+        <tcp-listener>
+            <port>1883</port>
+            <bind-address>0.0.0.0</bind-address>
+        </tcp-listener>
+    </listeners>
+
+    <control-center>
+        <enabled>true</enabled>
+        <listeners>
+            <http>
+                <port>8080</port>
+                <bind-address>0.0.0.0</bind-address>
+            </http>
+        </listeners>
+    </control-center>
+
+    <cluster>
+        <enabled>true</enabled>
+        <transport>
+            <tcp>
+                <bind-address>0.0.0.0</bind-address>
+                <bind-port>7800</bind-port>
+            </tcp>
+        </transport>
+        <discovery>
+            <static>
+                <node>
+                    <host>172.31.0.101</host>
+                    <port>7800</port>
+                </node>
+                <node>
+                    <host>172.31.0.102</host>
+                    <port>7800</port>
+                </node>
+                <node>
+                    <host>172.31.0.103</host>
+                    <port>7800</port>
+                </node>
+            </static>
+        </discovery>
+    </cluster>
+
+    <health-api>
+        <enabled>true</enabled>
+        <listeners>
+            <http>
+                <bind-address>0.0.0.0</bind-address>
+                <port>8889</port>
+            </http>
+        </listeners>
+    </health-api>
+
+
+</hivemq>
